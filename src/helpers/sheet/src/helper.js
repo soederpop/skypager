@@ -1,8 +1,8 @@
 import { google } from 'googleapis'
-import GoogleSpreadsheet from 'google-spreadsheet'
 
 export function attach(runtime) {
   const { Helper } = runtime
+  const GoogleSpreadsheet = require('./deps/google-spreadsheet')
 
   class Sheet extends Helper {
     static isCacheable = true
@@ -69,7 +69,7 @@ export function attach(runtime) {
 
     async loadAll(options = {}) {
       const { camelCase, kebabCase } = this.runtime.stringUtils
-      const { isEmpty, mapKeys } = this.lodash
+      const { castArray, mapValues, isEmpty, mapKeys } = this.lodash
 
       if (!this.authorized) {
         await this.authorize()
@@ -83,6 +83,9 @@ export function attach(runtime) {
       let rawData = await loadAll.call(this, options)
 
       rawData = mapKeys(rawData, (v, k) => camelCase(kebabCase(k)))
+      rawData = mapValues(rawData, (v, k) =>
+        castArray(v).map(row => mapKeys(row, (v, k) => camelCase(kebabCase(k.replace(/_/g, '-')))))
+      )
 
       if (typeof receiveData === 'function') {
         rawData = receiveData.call(this, rawData)

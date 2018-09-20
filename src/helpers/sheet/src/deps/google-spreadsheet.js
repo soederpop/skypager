@@ -4,7 +4,8 @@ var xml2js = require('xml2js')
 var http = require('http')
 var querystring = require('querystring')
 var _ = require('lodash')
-var GoogleAuth = require('google-auth-library')
+var { JWT, GoogleAuth } = __non_webpack_require__('google-auth-library')
+const { kebabCase, camelCase } = _
 
 var GOOGLE_FEED_URL = 'https://spreadsheets.google.com/feeds/'
 var GOOGLE_AUTH_SCOPE = ['https://spreadsheets.google.com/feeds']
@@ -65,13 +66,7 @@ var GoogleSpreadsheet = function(ss_key, auth_id, options) {
         return cb(err)
       }
     }
-    jwt_client = new auth_client.JWT(
-      creds.client_email,
-      null,
-      creds.private_key,
-      GOOGLE_AUTH_SCOPE,
-      null
-    )
+    jwt_client = new JWT(creds.client_email, null, creds.private_key, GOOGLE_AUTH_SCOPE, null)
     renewJwtAuth(cb)
   }
 
@@ -107,7 +102,7 @@ var GoogleSpreadsheet = function(ss_key, auth_id, options) {
     var url
     var headers = {}
     if (!cb) cb = function() {}
-    if (typeof url_params == 'string') {
+    if (typeof url_params === 'string') {
       // used for edit / delete requests
       url = url_params
     } else if (Array.isArray(url_params)) {
@@ -287,7 +282,7 @@ var GoogleSpreadsheet = function(ss_key, auth_id, options) {
     // the first row is used as titles/keys and is not included
 
     // opts is optional
-    if (typeof opts == 'function') {
+    if (typeof opts === 'function') {
       cb = opts
       opts = {}
     }
@@ -762,8 +757,6 @@ var SpreadsheetCell = function(spreadsheet, worksheet_id, data) {
   return self
 }
 
-module.exports = GoogleSpreadsheet
-
 // utils
 var forceArray = function(val) {
   if (Array.isArray(val)) return val
@@ -782,7 +775,8 @@ var xmlSafeValue = function(val) {
 }
 var xmlSafeColumnName = function(val) {
   if (!val) return ''
-  return String(val)
-    .replace(/[\s_]+/g, '')
-    .toLowerCase()
+  const k = camelCase(String(val).replace(/\W+/g, '-'))
+  return k
 }
+
+module.exports = GoogleSpreadsheet

@@ -19,7 +19,18 @@ const nodeConfig = merge(require('@skypager/webpack/config/webpack.config.common
   externals: [
     { '@skypager/runtime': 'commonjs2 @skypager/runtime' },
     nodeExternals({
+      modulesFromFile: false,
+      modulesDir: path.resolve(cwd, 'node_modules'),
+      whitelist: ['google-spreadsheet'],
+    }),
+    nodeExternals({
+      modulesFromFile: false,
+      modulesDir: path.resolve(cwd, '..', '..', '..', 'node_modules'),
+      whitelist: ['google-spreadsheet'],
+    }),
+    nodeExternals({
       modulesFromFile: true,
+      whitelist: ['google-spreadsheet'],
     }),
   ],
   plugins: [new SourceMapSupport()],

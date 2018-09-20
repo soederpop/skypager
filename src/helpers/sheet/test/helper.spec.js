@@ -22,9 +22,14 @@ describe('The Sheets Helper', function() {
 
   it('discovers available sheets from google drive', async function() {
     runtime.sheets.should.have.property('available').that.is.an('array').that.is.empty
-
     await runtime.sheets.discover()
-
     runtime.sheets.should.have.property('available').that.is.an('array').that.is.not.empty
+  })
+
+  it('camel cases the column names', async function() {
+    const sheet = runtime.sheet('skypagersheethelperfixture')
+    const { sheet1 } = await sheet.loadAll()
+    sheet1.should.be.an('array').that.is.not.empty
+    sheet1[0].should.be.an('object').with.property('columnOne')
   })
 })
