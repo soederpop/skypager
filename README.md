@@ -4,6 +4,8 @@
 
 Skypager is a universal JavaScript runtime that makes it easy to write applications which run on node, the browser, in react native, or electron.
 
+[View Tutorials](docs/tutorials)
+
 ## Helpers 
 
 Skypager provides a class based abstraction called `Helper`, which let us define patterns for working with groups of similar modules.  
