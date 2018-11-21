@@ -1,8 +1,41 @@
 import Directory from './directory'
+import lodash from 'lodash'
+
+const { keys, has, result } = lodash
 
 const hide = (o, p, value, configurable) =>
   Object.defineProperty(o, p, { value, configurable, enumerable: false })
 
+/**
+ * @name createMockContext
+ * @param {Object} object - an object whose keys will be members of the registry
+ * @returns {Function} requireContext - a webpack require function with a keys() method on it
+ */
+export function createMockContext(object = {}) {
+  const fn = key =>
+    result(object, key, () => {
+      throw new Error(`Module ${key} not found in mock context`)
+    })
+
+  return Object.assign(fn, {
+    keys() {
+      return keys(object)
+    },
+    resolve(key) {
+      const resolved = has(object, key) && key
+
+      if (resolved) {
+        return resolved
+      } else {
+        throw new Error(`Module ${key} not found in mock context`)
+      }
+    },
+  })
+}
+
+/**
+ * @extends Directory
+ */
 export class ContextRegistry extends Directory {
   constructor(name, options = {}) {
     if (typeof name === 'object') {
@@ -10,7 +43,7 @@ export class ContextRegistry extends Directory {
       name = options.name || (options.context && options.context.id)
     }
 
-    const webpackContext = options.context || options.req
+    const webpackContext = options.context || options.req || createMockContext()
     delete options.context
     delete options.req
 
@@ -19,10 +52,12 @@ export class ContextRegistry extends Directory {
     hide(
       this,
       'context',
-      this.wrapContext(webpackContext, {
-        ...options,
-        namespace: this.keyNamespace,
-      })
+      this.wrapContext(
+        webpackContext,
+        Object.assign({}, options, {
+          namespace: this.keyNamespace,
+        })
+      )
     )
 
     if (options.auto !== false) {
@@ -52,26 +87,25 @@ export class ContextRegistry extends Directory {
       webpackContext = webpackContext.convertToRequireContext()
     }
 
-    this.registerContextModules(this.wrapContext(webpackContext, { ...this.options, ...options }))
+    this.registerContextModules(
+      this.wrapContext(webpackContext, Object.assign({}, this.options, options))
+    )
   }
 
   registerContextModules(requireContext = this.context) {
     const map = requireContext.idsMappedToKeys
 
     requireContext.ids.forEach(id => {
-      this.register(id, () => requireContext.load(id), {
+      this.register(
         id,
-        ...requireContext.metaForKey(id),
-        ...this.options,
-      })
+        () => requireContext.load(id),
+        Object.assign({ id }, requireContext.metaForKey(id), this.options)
+      )
     })
   }
 
   wrapContext(webpackContext, options = {}) {
-    return new RequireContext(webpackContext, {
-      ...this.options,
-      ...options,
-    })
+    return new RequireContext(webpackContext, Object.assign({}, this.options, options))
   }
 }
 
@@ -151,15 +185,13 @@ export class RequireContext {
   }
 
   get idsMappedToKeys() {
-    return this.keys.reduce(
-      (memo, key) => ({
-        ...memo,
-        [`${key
-          .replace(/^\.\//, this.namespace)
-          .replace(this.prefix, '')
-          .replace(/\.\w+$/, '')}`]: key,
-      }),
-      {}
-    )
+    return this.keys.reduce((memo, key) => {
+      const id = `${key
+        .replace(/^\.\//, this.namespace)
+        .replace(this.prefix, '')
+        .replace(/\.\w+$/, '')}`
+
+      return Object.assign(memo, { [id]: key })
+    }, {})
   }
 }

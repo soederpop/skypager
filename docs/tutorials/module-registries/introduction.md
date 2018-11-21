@@ -83,8 +83,13 @@ This can be summarized as
 
 ## Skypager Registries 
 
-Node's `require.cache` is the language level module registry.  What if we wanted to develop domain level module registries, which 
-provided similar functionality to node's require on top of it.
+Node's `require.cache` is the language level module registry.  
+
+Skypager's Registry classes let us develop domain level module registries, which 
+provided similar functionality to node's require, but for specific collections of modules.
+
+It is very common that modules which live inside `src/pages` all have a select few things in common,
+and that modules which live inside `src/features` have things in common with eachother. 
 
 ```javascript
 const { Context: Registry } = require('@skypager/runtime/lib/registries') 
@@ -110,7 +115,26 @@ class PageModel {
 const pageModels = new PageModels('pageModels', {
   wrapper: (provider = {}, name) => new PageModel({ name, provider })
 })
+```
 
+In this example, we create a new class `PageModels` and extend from the [Skypager Context Registry](../src/runtime/src/registries/context.js)
+
+The instance of this registry `pageModels` a few important methods:
+
+- `register(id, () => moduleExports)`
+- `lookup(id)`
+- `available // => [id1, id2, id3]`
+- `checkKey(id) //=> id or false if not in there` 
+- `add(requireContext)`
+
+This particular type of registry works very well with webpack's `require.context` feature. 
+
+In the example below, we automatically register every module in the pages folder, without going into subfolders, if they end in .js
+
+```javascript
+pageModels.add(
+  require.context('./pages', false, /\.js$/)
+)
 ```
 
 

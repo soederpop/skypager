@@ -1,7 +1,14 @@
 {
   "name": "@skypager/tutorials-module-registries",
   "version": "1.0.0",
+  "scripts": {
+    "build": "webpack && cp public/index.html build/index.html",
+    "prestart": "yarn build",
+    "start": "skypager serve"
+  },
   "dependencies": {
+    "@skypager/cli": "^0.1.18",
+    "@skypager/devtools": "^0.1.18",
     "@skypager/runtime": "^0.1.18"
   }
 }

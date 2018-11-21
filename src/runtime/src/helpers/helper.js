@@ -33,7 +33,7 @@ const {
   zipObjectDeep,
 } = lodash
 
-const req = createMockContext('helpers')
+const req = createMockContext()
 
 let REGISTRY
 

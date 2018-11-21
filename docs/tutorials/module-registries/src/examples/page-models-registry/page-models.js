@@ -1,12 +1,10 @@
-import { Context as Registry } from '@skypager/runtime/lib/registries/context'
+import ContextRegistry from '@skypager/runtime/lib/registries/context'
+import { createMockContext } from '@skypager/runtime/lib/registries/context'
 import * as HomePage from './pages/HomePage'
 import * as AboutPage from './pages/AboutPage'
+import lodash from 'lodash'
 /**
- * @typedef PageModelProvider
- * @type {Object}
- * @property {Object} pageSelectors - an object of css selectors
- * @property {String} path - a route pattern for the pages path
- * @property {Array} pageMethods - a list of function names
+
  */
 
 /**
@@ -24,9 +22,9 @@ import * as AboutPage from './pages/AboutPage'
 
 /**
  * @name PageModels
- * @extends Registry
+ * @extends ContextRegistry
  */
-export class PageModels extends Registry {
+export class PageModels extends ContextRegistry {
   /**
    * @param {String} name - the name of the registry
    * @param {RegistryOptions} options - registry options
@@ -47,13 +45,21 @@ export class PageModel {
   /**
    *
    * @param {Object} options
-   * @param {String} options.name
-   * @param {PageModelProvider} options.provider - the page model implementation provider
+   * @param {String} options.name - the name of the page model
+   * @param {Object} options.provider - the page model implementation provider
+   * @param {Object} options.provider.pageSelectors - an object of css selectors
+   * @param {String} options.provider.pageSelectors.main - the main css selector for the page, should be an id
+   * @param {String} options.provider.path - a route pattern for the pages path
+   * @param {Array} [options.provider.pageMethods] - a list of function names
    */
   constructor(options) {
     /* @type PageModelProvider */
     this.provider = options.provider
-    this.name = options.name
+    this.name = options.name || this.constructor.name
+  }
+
+  get route() {
+    return this.provider.path
   }
 
   get selectors() {
@@ -63,8 +69,15 @@ export class PageModel {
   }
 }
 
+export const pageModelsApi = {
+  findByRoute(route) {
+    return lodash.entries(this.allMembers()).filter(([id, pageModel]) => pageModel.route === route)
+  },
+}
 export const pageModels = new PageModels('pageModels', {
   wrapper: (provider = {}, name) => new PageModel({ name, provider }),
+  context: createMockContext(),
+  api: pageModelsApi,
 })
 
 pageModels.register('HomePage', () => HomePage)
