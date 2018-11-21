@@ -1,0 +1,7 @@
+{
+  "name": "@skypager/tutorials-module-registries",
+  "version": "1.0.0",
+  "dependencies": {
+    "@skypager/runtime": "^0.1.18"
+  }
+}

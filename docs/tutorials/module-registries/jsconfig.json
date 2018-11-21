@@ -1,0 +1,14 @@
+{
+    "typeAcquisition": {
+        "enable": true
+    },
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "checkJs": true,
+    },
+    "include": [
+        "node_modules/@skypager/runtime/lib/**/*",
+        "examples/**/*"
+    ]
+}
