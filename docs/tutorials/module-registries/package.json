@@ -4,7 +4,9 @@
   "scripts": {
     "build": "webpack && cp public/index.html build/index.html",
     "prestart": "yarn build",
-    "start": "skypager serve"
+    "start": "skypager serve",
+    "console": "skypager --esm console",
+    "run": "node --require esm src/examples/page-models-registry/index.js"
   },
   "dependencies": {
     "@skypager/cli": "^0.1.18",
