@@ -1,0 +1,142 @@
+{
+  "lodash/partial": [
+    "global lodash",
+    "partial"
+  ],
+  "lodash/get": [
+    "lodash",
+    "get"
+  ],
+  "lodash/result": [
+    "lodash",
+    "result"
+  ],
+  "lodash/capitalize": [
+    "lodash",
+    "capitalize"
+  ],
+  "lodash/every": [
+    "lodash",
+    "every"
+  ],
+  "lodash/isRegExp": [
+    "lodash",
+    "isRegExp"
+  ],
+  "lodash/isUndefined": [
+    "lodash",
+    "isUndefined"
+  ],
+  "lodash/isFunction": [
+    "lodash",
+    "isFunction"
+  ],
+  "lodash/isArray": [
+    "lodash",
+    "isArray"
+  ],
+  "lodash/isString": [
+    "lodash",
+    "isString"
+  ],
+  "lodash/pickBy": [
+    "lodash",
+    "pickBy"
+  ],
+  "lodash/mapValues": [
+    "lodash",
+    "mapValues"
+  ],
+  "lodash/isObject": [
+    "lodash",
+    "isObject"
+  ],
+  "lodash/has": [
+    "lodash",
+    "has"
+  ],
+  "lodash/camelCase": [
+    "lodash",
+    "camelCase"
+  ],
+  "lodash/cloneDeep": [
+    "lodash",
+    "cloneDeep"
+  ],
+  "lodash/lowerFirst": [
+    "lodash",
+    "lowerFirst"
+  ],
+  "lodash/some": [
+    "lodash",
+    "some"
+  ],
+  "lodash/eq": [
+    "lodash",
+    "eq"
+  ],
+  "lodash/isMatch": [
+    "lodash",
+    "isMatch"
+  ],
+  "lodash/isEqual": [
+    "lodash",
+    "isEqual"
+  ],
+  "lodash/lt": [
+    "lodash",
+    "lt"
+  ],
+  "lodash/lte": [
+    "lodash",
+    "lte"
+  ],
+  "lodash/gt": [
+    "lodash",
+    "gt"
+  ],
+  "lodash/gte": [
+    "lodash",
+    "gte"
+  ],
+  "lodash/isNumber": [
+    "lodash",
+    "isNumber"
+  ],
+  "lodash/kebabCase": [
+    "lodash",
+    "kebabCase"
+  ],
+  "lodash/lowerCase": [
+    "lodash",
+    "lowerCase"
+  ],
+  "lodash/snakeCase": [
+    "lodash",
+    "snakeCase"
+  ],
+  "lodash/startCase": [
+    "lodash",
+    "startCase"
+  ],
+  "lodash/template": [
+    "lodash",
+    "template"
+  ],
+  "lodash/toLower": [
+    "lodash",
+    "toLower"
+  ],
+  "lodash/toUpper": [
+    "lodash",
+    "toUpper"
+  ],
+  "lodash/trimStart": [
+    "lodash",
+    "trimStart"
+  ],
+  "lodash/upperFirst": [
+    "lodash",
+    "upperFirst"
+  ]
+}

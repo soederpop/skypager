@@ -2,14 +2,7 @@
 /* copyright github/pillarjs */
 const { isArray } = require('lodash')
 
-/**
- * Expose `pathToRegexp`.
- */
-module.exports = pathToRegexp
-module.exports.parse = parse
-module.exports.compile = compile
-module.exports.tokensToFunction = tokensToFunction
-module.exports.tokensToRegExp = tokensToRegExp
+export default pathToRegexp
 
 /**
  * The main path matching regexp utility.
@@ -39,7 +32,7 @@ var PATH_REGEXP = new RegExp(
  * @param  {Object=} options
  * @return {!Array}
  */
-function parse(str, options) {
+export function parse(str, options) {
   var tokens = []
   var key = 0
   var index = 0
@@ -116,7 +109,7 @@ function parse(str, options) {
  * @param  {Object=}            options
  * @return {!function(Object=, Object=)}
  */
-function compile(str, options) {
+export function compile(str, options) {
   return tokensToFunction(parse(str, options))
 }
 
@@ -159,7 +152,7 @@ function encodeAsterisk(str) {
 /**
  * Expose a method for transforming tokens into the path function.
  */
-function tokensToFunction(tokens) {
+export function tokensToFunction(tokens) {
   // Compile all the tokens into regexps.
   var matches = new Array(tokens.length)
 
@@ -311,7 +304,7 @@ function flags(options) {
  * @param  {!Array}  keys
  * @return {!RegExp}
  */
-function regexpToRegexp(path, keys) {
+export function regexpToRegexp(path, keys) {
   // Use a negative lookahead to match only capturing groups.
   var groups = path.source.match(/\((?!\?)/g)
 
@@ -341,7 +334,7 @@ function regexpToRegexp(path, keys) {
  * @param  {!Object} options
  * @return {!RegExp}
  */
-function arrayToRegexp(path, keys, options) {
+export function arrayToRegexp(path, keys, options) {
   var parts = []
 
   for (var i = 0; i < path.length; i++) {
@@ -361,7 +354,7 @@ function arrayToRegexp(path, keys, options) {
  * @param  {!Object} options
  * @return {!RegExp}
  */
-function stringToRegexp(path, keys, options) {
+export function stringToRegexp(path, keys, options) {
   return tokensToRegExp(parse(path, options), keys, options)
 }
 
@@ -373,7 +366,7 @@ function stringToRegexp(path, keys, options) {
  * @param  {Object=}         options
  * @return {!RegExp}
  */
-function tokensToRegExp(tokens, keys, options) {
+export function tokensToRegExp(tokens, keys, options) {
   if (!isArray(keys)) {
     options /** @type {!Object} */ = keys || options
     keys = []
@@ -453,7 +446,7 @@ function tokensToRegExp(tokens, keys, options) {
  * @param  {Object=}               options
  * @return {!RegExp}
  */
-function pathToRegexp(path, keys, options) {
+export function pathToRegexp(path, keys, options) {
   if (!isArray(keys)) {
     options /** @type {!Object} */ = keys || options
     keys = []

@@ -1,29 +1,12 @@
-if (typeof global === 'undefined' && typeof window !== 'undefined') {
-  window.global = window
-}
+const runtime = require('@skypager/runtime').use(require('@skypager/helpers-client'))
 
-if (typeof process === 'undefined') {
-  global.process = { env: {} }
-} else {
-  global.process = process
-}
+runtime.features.add(require.context('./features', true, /\.js$/))
 
-const skypager = (global.skypager = global.runtime = require('@skypager/runtime').use(
-  require('@skypager/helpers-client')
-))
-
-skypager.features.add(require.context('./features', true, /\.js$/))
-
-module.exports = skypager.use('asset-loaders')
-
-skypager.hide('runtimeProvider', 'web', true)
-skypager.hide('runtimeModule', module.id, true)
+runtime.use('asset-loaders')
 
 if (typeof __PACKAGE__ !== 'undefined') {
   // eslint-disable-next-line
-  skypager.hide('runtimePackageInfo', __PACKAGE__, true)
+  runtime.hide('runtimePackageInfo', __PACKAGE__, true)
 }
 
-if (!global.skypager) {
-  global.skypager = skypager
-}
+module.exports = runtime

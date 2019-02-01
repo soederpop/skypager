@@ -759,7 +759,7 @@ export function attach(host, helperClass, options = {}) {
       : helperClass.createInstance(opts, helperContext, host, helperClass)
 
     if (opts.createGetter || opts.shortcut) {
-      host.lazy(opts.createGetter || opts.shortcut, () => helperInstance, true)
+      host.lazy(opts.createGetter || opts.shortcut, () => helperInstance, false)
     }
 
     helperInstance.hide('destroyHelper', () => {

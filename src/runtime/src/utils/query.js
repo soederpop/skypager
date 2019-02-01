@@ -1,23 +1,21 @@
-import {
-  result,
-  some,
-  eq,
-  isMatch,
-  isRegExp,
-  isEqual,
-  lt,
-  lte,
-  gt,
-  gte,
-  isObject,
-  isString,
-  isNumber,
-  isArray,
-} from 'lodash'
+import result from 'lodash/result'
+import some from 'lodash/some'
+import eq from 'lodash/eq'
+import isMatch from 'lodash/isMatch'
+import isRegExp from 'lodash/isRegExp'
+import isEqual from 'lodash/isEqual'
+import lt from 'lodash/lt'
+import lte from 'lodash/lte'
+import gt from 'lodash/gt'
+import gte from 'lodash/gte'
+import isObject from 'lodash/isObject'
+import isString from 'lodash/isString'
+import isNumber from 'lodash/isNumber'
+import isArray from 'lodash/isArray'
 
 const isRegex = isRegExp
 const equals = eq
-const not_equals = (...args) => !eq(...args)
+const not_equals = (...args) => !eq(...args) // eslint-disable-line
 const neq = (...args) => !eq(...args)
 
 export const operators = {

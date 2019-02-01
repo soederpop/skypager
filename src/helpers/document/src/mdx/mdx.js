@@ -1,5 +1,6 @@
 import { Helper } from '@skypager/runtime'
 import { discover } from './discover'
+import lodashFilter from 'lodash/filter'
 
 /**
  * The Mdx Helper is a wrapper for working with markdown or mdx documents.
@@ -116,22 +117,18 @@ export const attach = (...args) => Mdx.attach(...args)
 
 export default Mdx
 
-function findAllBy(...args) {
-  return this.chain
-    .get('available')
-    .map(id => this.runtime.doc(id))
-    .filter(...args)
-    .value()
+function findAllBy(registry, ...args) {
+  const { available = [] } = registry
+  return lodashFilter(available.map(id => this.runtime.mdxDoc(id)), ...args)
 }
 
-function filter(...args) {
-  return this.chain
-    .invoke('allMembers')
-    .entries()
-    .map(([id, doc]) => ({
-      ...doc,
-      id,
-    }))
-    .filter(...args)
-    .value()
+function filter(registry, ...args) {
+  const allMembers = registry.allMembers()
+  const entries = Object.entries(allMembers)
+  const haystack = entries.map(([id, script]) => ({
+    ...script,
+    id,
+  }))
+
+  return lodashFilter(haystack, ...args)
 }

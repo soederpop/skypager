@@ -1,9 +1,11 @@
+import * as strings from "./string"
+
 export { hideProperty, hideGetter, hideProperties, lazy, propertyUtils, mixinPropertyUtils, hide } from "./properties"
 
 export { query } from "./query"
 export { create as registry } from "./registry"
 
-export * as strings from "./string"
+export { strings }
 
 export testRule from "./path-matcher"
 

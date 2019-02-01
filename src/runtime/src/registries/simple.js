@@ -1,10 +1,10 @@
-import lodash from 'lodash'
 import { enhanceObject } from '../utils/properties'
 import query from '../utils/query'
 import registry from './registry'
 import router from './router'
+import lodash from 'lodash'
 
-const { pickBy, mapValues, isFunction, isObject, has, get, pick } = lodash
+const { pickBy, mapValues, isFunction, isObject, has, get } = lodash
 
 export class SimpleRegistry {
   /**
@@ -39,7 +39,14 @@ export class SimpleRegistry {
   constructor(name, options = {}, cache = {}) {
     this.name = name
 
-    enhanceObject(this, lodash)
+    enhanceObject(
+      this,
+      {
+        includeLodashMethods: false,
+        includeChain: true,
+      },
+      lodash
+    )
 
     hide(this, 'options', {
       router: {},
@@ -191,7 +198,15 @@ export class SimpleRegistry {
   }
 
   childRegistries() {
-    return pick(this, this.childRegistryNames)
+    const { childRegistryNames = [] } = this
+
+    return childRegistryNames.reduce(
+      (memo, prop) => ({
+        ...memo,
+        [prop]: this.childRegistries[prop],
+      }),
+      {}
+    )
   }
 
   lookupAll(componentId) {

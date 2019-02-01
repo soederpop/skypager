@@ -1,14 +1,15 @@
-import { Helper } from '@skypager/runtime'
+import { Helper } from '@skypager/runtime/lib/helper'
 import { discover } from './discover'
 import * as core from '@babel/core'
 import traverse from '@babel/traverse'
 import types from '@babel/types'
+import lodashFilter from 'lodash/filter'
 
 /**
- * The Script Helper lets us work with our JavaScript files and their AST
+ * The Babel Helper lets us work with our JavaScript files and their AST
  *
  * @export
- * @class Script
+ * @class Babel
  * @extends {Helper}
  */
 export class Babel extends Helper {
@@ -468,26 +469,24 @@ export class Babel extends Helper {
   }
 }
 
-export const attach = (...args) => Script.attach(...args)
+export const attach = (...args) => Babel.attach(...args)
 
 export default Babel
 
-function findAllBy(registry, ...args) {
-  return registry.chain
-    .get('available')
-    .map(id => this.runtime.script(id))
-    .filter(...args)
-    .value()
+function findAllBy(...args) {
+  const registry = this
+  const { available = [] } = registry
+  return lodashFilter(available.map(id => this.runtime.script(id)), ...args)
 }
 
-function filter(registry, ...args) {
-  return registry.chain
-    .invoke('allMembers')
-    .entries()
-    .map(([id, script]) => ({
-      ...script,
-      id,
-    }))
-    .filter(...args)
-    .value()
+function filter(...args) {
+  const registry = this
+  const allMembers = registry.allMembers()
+  const entries = Object.entries(allMembers)
+  const haystack = entries.map(([id, script]) => ({
+    ...script,
+    id,
+  }))
+
+  return lodashFilter(haystack, ...args)
 }

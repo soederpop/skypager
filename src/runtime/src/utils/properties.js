@@ -49,7 +49,7 @@ export function mixinPropertyUtils(target, includeLodashMethods = true, includeC
   return enhanceObject(target, { includeLodashMethods, includeChain }, global.lodash)
 }
 
-export function enhanceObject(target, options, lodash = global.lodash) {
+export function enhanceObject(target, options, lodash = global.lodash || {}) {
   const propUtils = propertyUtils(target)
 
   mapValues(propUtils, (fn, name) => {
@@ -120,14 +120,14 @@ export function enhanceObject(target, options, lodash = global.lodash) {
   }
 
   if (includeChain && !has(target, 'chain') && isFunction(lodash.chain)) {
-    const fn = partial(lodash.chain, target)
     hideGetter(target, 'chain', () => {
       global.DEBUG_LODASH_USAGE &&
         console.log(
           `LODASH ACCESS CHAIN`,
           target.constructor ? target.constructor.name : target.uuid || target
         )
-      return fn()
+
+      return lodash.chain(target)
     })
   }
 
@@ -330,7 +330,7 @@ export function lazy(target, attribute, fn, enumerable = false) {
         let value = typeof fn === 'function' ? fn.call(target) : fn
 
         defineProperty(target, attribute, {
-          enumerable: true,
+          enumerable,
           configurable: true,
           value,
         })

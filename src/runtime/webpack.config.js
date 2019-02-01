@@ -10,6 +10,8 @@ const baseProductionConfig = require('@skypager/webpack/config/webpack.config.pr
 const baseCommonConfig = require('@skypager/webpack/config/webpack.config.common')
 process.env.MINIFY = orig || false
 
+const lodashImports = require('./lodash-imports.json')
+
 const minifiedWebConfig = merge.strategy({ node: 'replace', entry: 'replace' })(
   baseProductionConfig,
   {
@@ -22,9 +24,17 @@ const minifiedWebConfig = merge.strategy({ node: 'replace', entry: 'replace' })(
       library: 'skypager',
       libraryTarget: 'umd',
     },
+    externals: [
+      {
+        lodash: {
+          var: 'global lodash',
+          commonjs2: 'lodash',
+          commonjs: 'lodash',
+        },
+      },
+    ],
     resolve: {
       alias: {
-        lodash: require.resolve('lodash/lodash.min.js'),
         mobx: path.resolve(cwd, 'src', 'mobx.umd.min.js'),
         vm: 'vm-browserify',
       },
@@ -32,6 +42,8 @@ const minifiedWebConfig = merge.strategy({ node: 'replace', entry: 'replace' })(
     entry: {
       'skypager-runtime.min': [
         '@babel/polyfill/noConflict',
+        path.resolve(cwd, 'src', 'global.polyfills'),
+        'expose-loader?lodash!lodash/lodash.min.js',
         path.resolve(cwd, 'src', 'index.web.js'),
       ],
     },
@@ -50,15 +62,28 @@ const webConfig = merge.strategy({ node: 'replace', entry: 'replace', plugins: '
       library: 'skypager',
       libraryTarget: 'umd',
     },
+    externals: [
+      {
+        lodash: {
+          var: 'global lodash',
+          commonjs2: 'lodash',
+          commonjs: 'lodash',
+        },
+      },
+    ],
     resolve: {
       alias: {
-        lodash: require.resolve('lodash/lodash.min.js'),
         mobx: path.resolve(cwd, 'src', 'mobx.umd.min.js'),
         vm: 'vm-browserify',
       },
     },
     entry: {
-      'skypager-runtime': ['@babel/polyfill/noConflict', path.resolve(cwd, 'src', 'index.web.js')],
+      'skypager-runtime': [
+        '@babel/polyfill/noConflict',
+        path.resolve(cwd, 'src', 'global.polyfills'),
+        'expose-loader?lodash!lodash/lodash.min.js',
+        path.resolve(cwd, 'src', 'index.web.js'),
+      ],
     },
     plugins: baseProductionConfig.plugins.filter(
       p => !p.constructor || !p.constructor.name === 'UglifyJsPlugin'
